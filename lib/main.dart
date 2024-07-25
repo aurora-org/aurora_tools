@@ -1,7 +1,7 @@
 import 'package:aurora_tools/pages/home/home.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
   runApp(const MyApp());
 }
 

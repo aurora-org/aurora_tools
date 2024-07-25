@@ -1,6 +1,9 @@
+import 'package:aurora_tools/db/favorite_word/dao.dart';
+import 'package:aurora_tools/model/start_demo_model.dart';
 import 'package:aurora_tools/pages/start_demo/start_demo_my_favorite.dart';
 import 'package:aurora_tools/pages/start_demo/start_demo_pick_word.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class StartDemoHome extends StatefulWidget {
   @override
@@ -9,6 +12,23 @@ class StartDemoHome extends StatefulWidget {
 
 class _StartDemoHomeState extends State<StartDemoHome> {
   int pageIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    loadingData();
+  }
+
+  Future<void> loadingData() async {
+    var list = await FavoriteWordDao.instance.queryAll();
+
+    if (!mounted) {
+      return;
+    }
+    var appState = Provider.of<StartDemoModel>(context, listen: false);
+
+    appState.updateFavorite(list);
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,11 @@
+import 'package:aurora_tools/instance/favorite_word.dart';
 import 'package:aurora_tools/model/start_demo_model.dart';
 import 'package:aurora_tools/util/extension.dart';
 import 'package:aurora_tools/util/toast.dart';
 import 'package:aurora_tools/widgets/big_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class PickWord extends StatelessWidget {
   @override
@@ -12,7 +14,7 @@ class PickWord extends StatelessWidget {
     var pair = appState.current;
 
     IconData icon;
-    if (appState.favorites.contains(pair)) {
+    if (appState.isExist(pair.first, pair.second)) {
       icon = Icons.favorite;
     } else {
       icon = Icons.favorite_border;
@@ -31,7 +33,10 @@ class PickWord extends StatelessWidget {
               // may be change the state management to provider or bloc
               ElevatedButton.icon(
                   onPressed: () {
-                    appState.addFavorite(pair);
+                    appState.addFavorite(FavoriteWord(
+                        uuid: Uuid().v1(),
+                        first: pair.first,
+                        second: pair.second));
                     Toast.success(context, 'Success');
                   }.throttle(2000),
                   icon: Icon(icon),

@@ -8,14 +8,13 @@ class MyFavoriteWord extends StatelessWidget {
     var appState = context.watch<StartDemoModel>();
     var list = appState.favorites;
 
-    // TODO: store in local storage
-
     if (appState.favorites.isEmpty) {
       return const Center(
         child: Text('Empty'),
       );
     }
 
+    // TODO: Visualize the list of favorite words
     return ListView(
       children: [
         Padding(

@@ -7,6 +7,7 @@ A simple application for aurora org.
 - [ ] I18n
 - [ ] Multiple image watermark
 - [ ] Network part
-- [ ] Local Storage
+- [x] Local Storage
 - [ ] Debounce / Throttle
 - [ ] Logger
+- [ ] Word Picker Page: virtual list
