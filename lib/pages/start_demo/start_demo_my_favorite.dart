@@ -2,13 +2,16 @@ import 'package:aurora_tools/model/start_demo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MyFavoriteWord extends StatelessWidget {
+class MyFavoriteWord extends StatefulWidget {
+  @override
+  State<MyFavoriteWord> createState() => _MyFavoriteWordState();
+}
+
+class _MyFavoriteWordState extends State<MyFavoriteWord> {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<StartDemoModel>();
     var list = appState.favorites;
-
-    // TODO: store in local storage
 
     if (appState.favorites.isEmpty) {
       return const Center(
@@ -16,6 +19,7 @@ class MyFavoriteWord extends StatelessWidget {
       );
     }
 
+    // TODO: Visualize the list of favorite words
     return ListView(
       children: [
         Padding(
