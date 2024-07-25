@@ -2,12 +2,7 @@ import 'package:aurora_tools/model/start_demo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MyFavoriteWord extends StatefulWidget {
-  @override
-  State<MyFavoriteWord> createState() => _MyFavoriteWordState();
-}
-
-class _MyFavoriteWordState extends State<MyFavoriteWord> {
+class MyFavoriteWord extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<StartDemoModel>();

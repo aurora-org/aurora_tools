@@ -28,8 +28,6 @@ class _StartDemoHomeState extends State<StartDemoHome> {
     var appState = Provider.of<StartDemoModel>(context, listen: false);
 
     appState.updateFavorite(list);
-
-    print('here');
   }
 
   @override
