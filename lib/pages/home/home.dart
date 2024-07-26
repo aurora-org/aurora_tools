@@ -1,6 +1,3 @@
-import 'package:aurora_tools/pages/start_demo/start_demo.dart';
-import 'package:aurora_tools/util/extension.dart';
-import 'package:aurora_tools/util/toast.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -25,16 +22,15 @@ class HomePage extends StatelessWidget {
           children: [
             ElevatedButton.icon(
               onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => StartDemo()));
+                Navigator.pushNamed(context, '/start_demo');
               },
               icon: const Icon(Icons.book),
               label: const Text('Word Picker'),
             ),
             ElevatedButton.icon(
               onPressed: () {
-                Toast.info(context, 'Coming Soon...');
-              }.throttle(2000),
+                Navigator.pushNamed(context, '/water_mark');
+              },
               icon: const Icon(Icons.camera_alt),
               label: const Text('Water Mark'),
             ),
