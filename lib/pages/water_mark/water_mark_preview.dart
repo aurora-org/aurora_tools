@@ -2,8 +2,38 @@ import 'dart:io';
 
 import 'package:aurora_tools/model/water_marker_model.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class WaterMarkPreview extends StatelessWidget {
+class WaterMarkPreview extends StatefulWidget {
+  @override
+  State<WaterMarkPreview> createState() => _WaterMarkPreviewState();
+}
+
+class _WaterMarkPreviewState extends State<WaterMarkPreview> {
+  Future<void> requestPermission() async {
+    // TODO: use "photos" belowd android 13
+    await Permission.notification.request();
+    PermissionStatus result = await Permission.photos.request();
+
+    if (result.isDenied) {
+      print('request again');
+      result = Platform.isIOS
+          ? await Permission.photos.request()
+          : await Permission.storage.request();
+    }
+
+    if (!result.isGranted && !result.isLimited) {
+      // TODO: open setting here
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    requestPermission();
+  }
+
   @override
   Widget build(BuildContext context) {
     final WaterMarkerModel appState =

@@ -22,7 +22,9 @@ class WaterMarkerModel extends ChangeNotifier {
   Future<void> waterMarkImage() async {
     if (imagePaths.isNotEmpty) {
       String imgPath = imagePaths[0];
-      ImageUtil.addWatermark(imgPath, "Edward");
+      // TODO: multi image watermark
+      ImageUtil.addWatermark(
+          imgPath: imgPath, watermarkText: "==== Watermarked ==== ==>>");
     }
   }
 }

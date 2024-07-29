@@ -32,7 +32,9 @@ class HomePage extends StatelessWidget {
                 Navigator.pushNamed(context, '/water_mark');
               },
               icon: const Icon(Icons.camera_alt),
-              label: const Text('Water Mark'),
+              label: const Text(
+                'Water Mark',
+              ),
             ),
           ],
         ),
