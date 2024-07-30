@@ -16,7 +16,9 @@ class AButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPress,
         style: ButtonStyle(
+            // ignore: deprecated_member_use
             elevation: MaterialStateProperty.all(0),
+            // ignore: deprecated_member_use
             backgroundColor: MaterialStateProperty.all(Colors.transparent)),
         child: Text(
           actionText,

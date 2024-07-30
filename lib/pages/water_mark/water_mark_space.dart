@@ -21,7 +21,6 @@ class ImageSpace extends StatelessWidget {
           height: 44,
           child: FloatingActionButton(
             onPressed: () {
-              // FIXME: why i get a new context here?
               Navigator.pushNamed(context, '/water_mark/preview',
                   arguments: context.read<WaterMarkerModel>());
             },

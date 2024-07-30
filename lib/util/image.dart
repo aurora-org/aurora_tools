@@ -39,22 +39,23 @@ class ImageUtil {
     }
   }
 
-  static Future<void> addWatermark({
+  static Future<Uint8List?> getWatermarkedImageBytes({
     required String imgPath,
     required String watermarkText,
     double percentage = 0.02,
-    // FIXME: use Font class to extend the constant name
+    double x = 0.0,
+    double y = 0.0,
+    bool bold = false,
+    // TODO: use Font class to extend the constant name
     // const String fontFamily = 'FiraCode', // TODO: enum
     String position = 'top-center', // TODO: enum
   }) async {
-    // TODO: loading here
     ImageItem? imageItem = await loadImage(imgPath);
 
     if (imageItem == null) {
-      return;
+      return null;
     }
 
-    String imgName = p.basenameWithoutExtension(imgPath);
     String imgType = p.extension(imgPath);
     final regex = RegExp(r'\.(jpg|jpeg)$', caseSensitive: false);
     final isJpg = regex.hasMatch(imgType);
@@ -68,13 +69,14 @@ class ImageUtil {
     double fontSize = (isHorizontal
         ? imageItem.height * percentage
         : imageItem.width * percentage);
+
     TextSpan textSpan = TextSpan(
         text: watermarkText,
         style: TextStyle(
             fontSize: fontSize,
             color: Colors.red,
             fontFamily: 'FiraCode',
-            fontWeight: FontWeight.bold));
+            fontWeight: bold ? FontWeight.bold : FontWeight.normal));
     TextPainter textPainter =
         TextPainter(text: textSpan, textDirection: TextDirection.ltr);
     textPainter.layout();
@@ -92,43 +94,50 @@ class ImageUtil {
     Uint8List textImageBytes = textImageData!.buffer.asUint8List();
     final textImage = MImage.decodeImage(textImageBytes)!;
 
-    print(imageItem.width / 2 - textWidth / 2);
-    print(imageItem.height * 0.02);
+    // MImage.Image newImage = MImage.compositeImage(image, textImage,
+    //     dstX: (imageItem.width / 2 - textWidth / 2).toInt(),
+    //     dstY: (imageItem.height * 0.02).toInt());
+
+    // TODO: position
 
     MImage.Image newImage = MImage.compositeImage(image, textImage,
-        dstX: (imageItem.width / 2 - textWidth / 2).toInt(),
-        dstY: (imageItem.height * 0.02).toInt());
+        dstX: (x * imageItem.width).toInt(),
+        dstY: (y * imageItem.height).toInt());
 
-    // MImage.Image newImage =
-    //     MImage.compositeImage(image, textImage, dstX: 0, dstY: 0);
-
-    final outputBytes = Uint8List.fromList(
+    return Uint8List.fromList(
         isJpg ? MImage.encodeJpg(newImage) : MImage.encodePng(newImage));
+  }
 
+  static Future<void> saveImage(Uint8List imageBytes, String fileName) async {
     if (await Permission.photos.request().isGranted) {
-      final result = await ImageGallerySaver.saveImage(outputBytes,
-          name: '${imgName}_aurora$imgType');
-
-      print('success');
-      print(result);
+      final result =
+          await ImageGallerySaver.saveImage(imageBytes, name: fileName);
 
       // TODO: end loading & back here.
     } else {
       print('Permission not granted');
     }
+  }
 
-    // Display a confirmation dialog
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => AlertDialog(
-    //     content: Text('Watermark added and image saved!'),
-    //     actions: [
-    //       TextButton(
-    //         onPressed: () => Navigator.of(context).pop(),
-    //         child: Text('OK'),
-    //       ),
-    //     ],
-    //   ),
-    // );
+  static Future<void> addWatermark({
+    required String imgPath,
+    required String watermarkText,
+    double percentage = 0.02,
+    double x = 0.0,
+    double y = 0.0,
+    bool bold = false,
+    // TODO: use Font class to extend the constant name
+    // const String fontFamily = 'FiraCode', // TODO: enum
+    String position = 'top-center', // TODO: enum
+  }) async {
+    // TODO: loading here
+
+    String imgName = p.basenameWithoutExtension(imgPath);
+    String imgType = p.extension(imgPath);
+
+    final outputBytes = await getWatermarkedImageBytes(
+        imgPath: imgPath, watermarkText: watermarkText, x: x, y: y, bold: bold);
+
+    await saveImage(outputBytes!, '${imgName}_aurora$imgType');
   }
 }

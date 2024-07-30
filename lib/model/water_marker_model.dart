@@ -19,12 +19,37 @@ class WaterMarkerModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> waterMarkImage() async {
+  Future<bool> waterMarkAll(
+      {required String text,
+      double x = 0,
+      double y = 0,
+      bool bold = false}) async {
     if (imagePaths.isNotEmpty) {
-      String imgPath = imagePaths[0];
-      // TODO: multi image watermark
-      ImageUtil.addWatermark(
-          imgPath: imgPath, watermarkText: "==== Watermarked ==== ==>>");
+      bool success = true;
+      for (var imgPath in imagePaths) {
+        bool result = await waterMarkImage(
+            path: imgPath, text: text, x: x, y: y, bold: bold);
+
+        if (!result) {
+          success = false;
+        }
+      }
+
+      return success;
     }
+
+    return false;
+  }
+
+  Future<bool> waterMarkImage(
+      {required String path,
+      required String text,
+      double x = 0,
+      double y = 0,
+      bool bold = false}) async {
+    await ImageUtil.addWatermark(
+        imgPath: path, watermarkText: text, x: x, y: y, bold: bold);
+
+    return true;
   }
 }
