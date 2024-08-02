@@ -6,6 +6,15 @@ import 'package:aurora_tools/util/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+const List<String> _positionList = [
+  'Top Center',
+  'Top Left',
+  'Top Right',
+  'Bottom Center',
+  'Bottom Left',
+  'Bottom Right',
+];
+
 class WaterMarkPreview extends StatefulWidget {
   @override
   State<WaterMarkPreview> createState() => _WaterMarkPreviewState();
@@ -13,15 +22,64 @@ class WaterMarkPreview extends StatefulWidget {
 
 class _WaterMarkPreviewState extends State<WaterMarkPreview> {
   final TextEditingController _textController = TextEditingController();
+  String _dropDownValue = _positionList.first;
   String _waterMarkText = 'Aurora Water Mark';
   double _fontSize = 0.02;
   double _x = 0;
   double _y = 0;
-  double _xPosition = 0.02;
+  double _xPosition = 0.00;
   double _yPosition = 0.02;
   // TODO: opacity
   double _opacity = 0.5;
   bool _loading = false;
+
+  _calculate_position(String value) {
+    switch (value) {
+      case 'Top Left':
+        setState(() {
+          _xPosition = 0.02;
+          _yPosition = 0.02;
+          _dropDownValue = value;
+        });
+        break;
+      case 'Top Right':
+        setState(() {
+          _xPosition = 0.98;
+          _yPosition = 0.02;
+          _dropDownValue = value;
+        });
+        break;
+      case 'Top Center':
+        setState(() {
+          _xPosition = 0;
+          _yPosition = 0.02;
+          _dropDownValue = value;
+        });
+        break;
+      case 'Bottom Left':
+        setState(() {
+          _xPosition = 0.02;
+          _yPosition = 0.98;
+          _dropDownValue = value;
+        });
+        break;
+      case 'Bottom Right':
+        setState(() {
+          _xPosition = 0.98;
+          _yPosition = 0.98;
+          _dropDownValue = value;
+        });
+        break;
+      case 'Bottom Center':
+        setState(() {
+          _xPosition = 0;
+          _yPosition = 0.98;
+          _dropDownValue = value;
+        });
+    }
+
+    _initWaterMark(context);
+  }
 
   Future<void> _requestPermission() async {
     // TODO: use "photos" belowd android 13
@@ -48,16 +106,22 @@ class _WaterMarkPreviewState extends State<WaterMarkPreview> {
       return;
     }
 
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenContainer = screenWidth - 32;
-    final currentWidth = 500 * imageItem!.width / imageItem.height;
-    final imgWidth =
-        currentWidth > screenContainer ? screenContainer : currentWidth;
+    final screenContainer = MediaQuery.of(context).size.width - 32;
+    final isHorizontal = imageItem!.width > imageItem.height;
+    final imgWidth = screenContainer;
+    final imgHeight = imgWidth * imageItem.height / imageItem.width;
+    final fontSize = isHorizontal ? imgHeight * 0.02 : imgWidth * 0.02;
+
+    // NOTE: 1.6 depend on the FONT.
+    // it's the ratio of the font size to the length of the water mark text
+    final textLength = fontSize * _waterMarkText.length / 1.6;
 
     setState(() {
-      _fontSize = imgWidth * 0.02;
-      _x = imgWidth * _xPosition;
-      _y = 500 * _yPosition;
+      _fontSize = fontSize;
+      _x = _xPosition == 0
+          ? imgWidth / 2 - textLength / 2
+          : screenContainer * _xPosition + (_xPosition > 0.5 ? -textLength : 0);
+      _y = imgHeight * _yPosition + (_yPosition > 0.5 ? -fontSize : 0);
     });
   }
 
@@ -102,7 +166,6 @@ class _WaterMarkPreviewState extends State<WaterMarkPreview> {
         child: ListView(
           children: [
             Container(
-              height: 500,
               child: Stack(
                 children: [
                   Align(
@@ -122,7 +185,8 @@ class _WaterMarkPreviewState extends State<WaterMarkPreview> {
                           style: TextStyle(
                             fontFamily: 'FiraCode',
                             fontSize: _fontSize,
-                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            color: const Color.fromRGBO(255, 255, 255, 0.61),
                           ),
                         )),
                   )
@@ -141,6 +205,17 @@ class _WaterMarkPreviewState extends State<WaterMarkPreview> {
                     label: Text('Aurora Water Mark')),
               ),
             ),
+            const SizedBox(
+              height: 16,
+            ),
+            DropdownMenu(
+                initialSelection: _dropDownValue,
+                onSelected: (String? value) {
+                  _calculate_position(value!);
+                },
+                dropdownMenuEntries: _positionList.map((String value) {
+                  return DropdownMenuEntry(value: value, label: value);
+                }).toList()),
             const SizedBox(
               height: 16,
             ),

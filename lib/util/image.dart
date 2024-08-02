@@ -48,7 +48,6 @@ class ImageUtil {
     bool bold = false,
     // TODO: use Font class to extend the constant name
     // const String fontFamily = 'FiraCode', // TODO: enum
-    String position = 'top-center', // TODO: enum
   }) async {
     ImageItem? imageItem = await loadImage(imgPath);
 
@@ -74,7 +73,7 @@ class ImageUtil {
         text: watermarkText,
         style: TextStyle(
             fontSize: fontSize,
-            color: Colors.red,
+            color: const Color.fromRGBO(255, 255, 255, 0.61),
             fontFamily: 'FiraCode',
             fontWeight: bold ? FontWeight.bold : FontWeight.normal));
     TextPainter textPainter =
@@ -94,14 +93,11 @@ class ImageUtil {
     Uint8List textImageBytes = textImageData!.buffer.asUint8List();
     final textImage = MImage.decodeImage(textImageBytes)!;
 
-    // MImage.Image newImage = MImage.compositeImage(image, textImage,
-    //     dstX: (imageItem.width / 2 - textWidth / 2).toInt(),
-    //     dstY: (imageItem.height * 0.02).toInt());
-
-    // TODO: position
-
     MImage.Image newImage = MImage.compositeImage(image, textImage,
-        dstX: (x * imageItem.width).toInt(),
+        dstX: (x == 0
+                ? (imageItem.width / 2 - textWidth / 2)
+                : x * imageItem.width)
+            .toInt(),
         dstY: (y * imageItem.height).toInt());
 
     return Uint8List.fromList(
@@ -128,10 +124,7 @@ class ImageUtil {
     bool bold = false,
     // TODO: use Font class to extend the constant name
     // const String fontFamily = 'FiraCode', // TODO: enum
-    String position = 'top-center', // TODO: enum
   }) async {
-    // TODO: loading here
-
     String imgName = p.basenameWithoutExtension(imgPath);
     String imgType = p.extension(imgPath);
 
