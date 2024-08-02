@@ -46,6 +46,12 @@ class _StartDemoHomeState extends State<StartDemoHome> {
 
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
+        appBar: AppBar(
+          flexibleSpace: const FlexibleSpaceBar(
+            title: Text('Word Picker'),
+            centerTitle: true,
+          ),
+        ),
         body: Row(
           children: [
             SafeArea(

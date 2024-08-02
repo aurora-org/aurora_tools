@@ -1,5 +1,5 @@
 name: aurora_tools
-description: "Aurora tools is a tools application for phone"
+description: 'Aurora tools is a tools application for phone'
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -34,7 +34,6 @@ dependencies:
   english_words: ^4.0.0
   provider: ^6.0.0
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
@@ -42,6 +41,10 @@ dependencies:
   uuid: ^4.4.2
   sqflite_common_ffi: ^2.3.3
   path: ^1.9.0
+  image_picker: ^1.1.2
+  image: ^4.2.0
+  image_gallery_saver: ^2.0.3
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:
@@ -59,7 +62,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -95,3 +97,14 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: FiraCode
+      fonts:
+        - asset: fonts/FiraCode-Regular.ttf
+        - asset: fonts/FiraCode-Bold.ttf
+          weight: 600
+    - family: Rubik
+      fonts:
+        - asset: fonts/Rubik-Regular.ttf
+        - asset: fonts/Rubik-SemiBold.ttf
+          weight: 600
